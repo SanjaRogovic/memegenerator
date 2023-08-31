@@ -2,23 +2,19 @@ import React, {useState, useEffect} from 'react'
 import axios from "axios"
 
 const FetchIp = () => {
-    const [memeList, setMemeList] = useState([])
-    const [meme, setMeme] = useState({
-        topText: "",
-        bottomText: "",
-        img: "https://i.imgflip.com/30b1gx.jpg"
-    })
+    const [allMemes, setAllMemes] = useState([])
+    const [currentMeme, setCurrentMeme] = useState({})
+    const [topInput, setTopInput] = useState("")
+    const [bottomInput, setBottomInput] = useState("")
 
     const fetchMeme = async() => {
         try {
             const response = await axios.get("https://api.imgflip.com/get_memes")
             // console.log(response)
-
             const memes = response.data.data.memes
-            console.log(memes)
-
-            setMemeList(memes)
-            
+            // console.log(memes)
+            setAllMemes(memes)
+            setCurrentMeme(memes[0])
         } catch (error) {
             console.error(error)
         }
@@ -28,50 +24,47 @@ const FetchIp = () => {
         fetchMeme();
     }, [])
 
-    const getRandomImg = () =>{
-        const memeImg = memeList[Math.floor(Math.random() * memeList.length)]
-        let url = memeImg.url;
 
-        setMeme((prevMeme) => ({
-            ...prevMeme, img: url,
-        }))
-    }
+    const handleClick = () => {
+      const randomMeme = Math.floor(Math.random() * allMemes.length)
+      setCurrentMeme(allMemes[randomMeme])
+      }
 
-    const handleChange = (e) => {
-        const {name, value} = e.target;
-        setMeme((prevMeme) => ({
-            ...prevMeme, [name]: value,
-        }))
-    }
+   const topInputHandler = (e) => {
+    setTopInput(e.target.value)
+   }
 
+   const bottomInputHandler = (e) => {
+    setBottomInput(e.target.value)
+   }
 
   return (
-    <div>
-      <div className='input'>
-        <input
-          onChange={handleChange}
-          value={meme.topText}
-          placeholder="type something"
-          type="text"
-          name="topText"
-        />
-        <input
-          onChange={handleChange}
-          value={meme.bottomText}
-          placeholder="type something"
-          type="text"
-          name="bottomText"
-        />
-      </div>
-
-      <button onClick={getRandomImg}>Get new meme! </button>
-
-      <div className='singleMeme'>
-        <img src="{meme.img}" alt="meme" />
-        <p> {meme.topText} </p>
-        <p> {meme.bottomText} </p>
-
-      </div>
+    <div className="memeContainer">
+      {currentMeme && (
+        <div>
+          <h1 className='header'>Meme Generator</h1>
+          <input
+            onChange={topInputHandler}
+            type="text"
+            placeholder="Top text"
+            value={topInput}
+            required
+          />
+          <input
+            onChange={bottomInputHandler}
+            type="text"
+            placeholder="Bottom text"
+            value={bottomInput}
+            required
+          />
+          <div className="memeBtn">
+            <button onClick={handleClick}>Select random meme</button>
+          </div>
+          <div className="memeImg">
+            <img src={currentMeme.url} alt="Meme" />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
