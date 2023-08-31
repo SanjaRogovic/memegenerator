@@ -43,25 +43,30 @@ const FetchIp = () => {
       {currentMeme && (
         <div>
           <h1 className='header'>Meme Generator</h1>
+          <div className='inputWrapper'>
           <input
             onChange={topInputHandler}
             type="text"
             placeholder="Top text"
-            value={topInput}
+            // value={topInput}
             required
           />
           <input
             onChange={bottomInputHandler}
             type="text"
             placeholder="Bottom text"
-            value={bottomInput}
+            // value={bottomInput}
             required
           />
+          </div>
+          
           <div className="memeBtn">
             <button onClick={handleClick}>Select random meme</button>
           </div>
-          <div className="memeImg">
-            <img src={currentMeme.url} alt="Meme" />
+          <div className="memeWrapper">
+            <p className='topInput'>{topInput}</p>
+            <p className='bottomInput'>{bottomInput}</p>
+            <img className="meme" src={currentMeme.url} alt={currentMeme.name} />
           </div>
         </div>
       )}
